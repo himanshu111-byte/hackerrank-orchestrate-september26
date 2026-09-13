@@ -3,14 +3,36 @@ from decimal import Decimal
 
 import pandas as pd
 
+from evidence import (
+    extract_message_evidence,
+)
+
+from evidence_apply import (
+    apply_message_evidence_to_series,
+)
+
 from lifecycle import (
     CashFlow,
     future_explicit_cashflows,
 )
-from money import ExchangeRateBook, money
+
+from money import (
+    ExchangeRateBook,
+    money,
+)
+
 from recurrence import (
     generate_recurring_cashflows,
     infer_recurring_series,
+)
+
+from salary_resolver import (
+    generate_salary_occurrences,
+    infer_stable_salary_stream,
+)
+
+from salary_evidence import (
+    apply_salary_evidence,
 )
 
 
@@ -36,7 +58,14 @@ def build_baseline_cashflows(
     request_date: pd.Timestamp,
     home_currency: str,
     fx: ExchangeRateBook,
+    messages: pd.DataFrame | None = None,
+    user_id: str | None = None,
+    request_id: str | None = None,
 ) -> list[CashFlow]:
+
+    request_date = pd.Timestamp(
+        request_date
+    )
 
     forecast_end = (
         request_date
@@ -44,6 +73,10 @@ def build_baseline_cashflows(
             days=FORECAST_DAYS
         )
     )
+
+    # =========================================================
+    # 1. EXPLICIT FUTURE CASH FLOWS
+    # =========================================================
 
     explicit = (
         future_explicit_cashflows(
@@ -55,6 +88,47 @@ def build_baseline_cashflows(
         )
     )
 
+    # =========================================================
+    # 2. MESSAGE EVIDENCE
+    # =========================================================
+    #
+    # Extract once and reuse for both:
+    #
+    # - recurring expense adjustments
+    # - salary overrides / salary termination
+    # =========================================================
+
+    evidence = []
+
+    if (
+        messages is not None
+        and user_id is not None
+    ):
+        evidence = (
+            extract_message_evidence(
+                messages=messages,
+                user_id=user_id,
+                request_id=request_id,
+            )
+        )
+
+    # =========================================================
+    # 3. GENERIC RECURRING FLOWS
+    # =========================================================
+    #
+    # IMPORTANT:
+    #
+    # recurrence.py now excludes salary.
+    #
+    # This section should therefore handle recurring:
+    #
+    # - expenses
+    # - subscriptions
+    # - debt payments
+    #
+    # Salary is handled separately below.
+    # =========================================================
+
     recurring_series = (
         infer_recurring_series(
             events=events,
@@ -63,6 +137,14 @@ def build_baseline_cashflows(
             fx=fx,
         )
     )
+
+    if evidence:
+        recurring_series = (
+            apply_message_evidence_to_series(
+                recurring_series,
+                evidence,
+            )
+        )
 
     recurring = (
         generate_recurring_cashflows(
@@ -73,13 +155,150 @@ def build_baseline_cashflows(
         )
     )
 
-    flows = explicit + recurring
+    # Start with all non-generated-salary flows.
+    flows: list[CashFlow] = (
+        list(explicit)
+        + list(recurring)
+    )
+
+    # =========================================================
+    # 4. DEDICATED SALARY RESOLVER
+    # =========================================================
+    #
+    # This avoids mixing:
+    #
+    # - base salary
+    # - commission
+    # - bonus
+    # - arrears
+    # - reimbursements
+    # - adjustments
+    #
+    # Only stable / confirmed salary gets projected.
+    # =========================================================
+
+    salary_stream = (
+        infer_stable_salary_stream(
+            events=events,
+            request_date=request_date,
+        )
+    )
+
+    salary_stream = (
+        apply_salary_evidence(
+            stream=salary_stream,
+            evidence=evidence,
+            request_date=request_date,
+        )
+    )
+
+    # =========================================================
+    # 5. GENERATE FUTURE SALARY FLOWS
+    # =========================================================
+
+    if salary_stream is not None:
+
+        salary_occurrences = (
+            generate_salary_occurrences(
+                stream=salary_stream,
+                request_date=request_date,
+                forecast_end=forecast_end,
+                home_currency=home_currency,
+                fx=fx,
+            )
+        )
+
+        for (
+            salary_date,
+            salary_amount,
+        ) in salary_occurrences:
+
+            salary_date = (
+                pd.Timestamp(
+                    salary_date
+                )
+                .normalize()
+            )
+
+            salary_amount = money(
+                salary_amount
+            )
+
+            # -------------------------------------------------
+            # Explicit salary takes precedence.
+            #
+            # Example:
+            #
+            # request_25 already contains an explicit salary
+            # around 2024-03-15.
+            #
+            # We must suppress ONLY that generated occurrence,
+            # not every later salary occurrence.
+            # -------------------------------------------------
+
+            duplicate_salary = False
+
+            for flow in explicit:
+
+                flow_category = str(
+                    getattr(
+                        flow,
+                        "category",
+                        "",
+                    )
+                ).strip().lower()
+
+                if flow_category != "salary":
+                    continue
+
+                flow_date = (
+                    pd.Timestamp(
+                        flow.date
+                    )
+                    .normalize()
+                )
+
+                date_difference = abs(
+                    (
+                        flow_date
+                        - salary_date
+                    ).days
+                )
+
+                if date_difference <= 2:
+                    duplicate_salary = True
+                    break
+
+            if duplicate_salary:
+                continue
+
+            # Salary must always be a positive cash inflow.
+            if salary_amount <= Decimal("0"):
+                continue
+
+            flows.append(
+                CashFlow(
+                    date=salary_date,
+                    amount=salary_amount,
+                    source="recurring_salary",
+                    category="salary",
+                    flexibility="fixed",
+                )
+            )
+
+    # =========================================================
+    # 6. RETURN CHRONOLOGICALLY SORTED FLOWS
+    # =========================================================
 
     return sorted(
         flows,
         key=lambda flow: (
-            flow.date,
-            flow.source,
+            pd.Timestamp(
+                flow.date
+            ),
+            str(
+                flow.source
+            ),
         ),
     )
 
@@ -113,14 +332,19 @@ def run_forecast(
         minimum_balance
     )
 
-    all_flows = list(flows)
+    all_flows = list(
+        flows
+    )
 
     if additional_flows:
         all_flows.extend(
             additional_flows
         )
 
-    # Group cash movement by date.
+    # =========================================================
+    # GROUP CASH MOVEMENT BY DATE
+    # =========================================================
+
     by_date: dict[
         pd.Timestamp,
         Decimal,
@@ -128,9 +352,12 @@ def run_forecast(
 
     for flow in all_flows:
 
-        flow_date = pd.Timestamp(
-            flow.date
-        ).normalize()
+        flow_date = (
+            pd.Timestamp(
+                flow.date
+            )
+            .normalize()
+        )
 
         by_date[flow_date] = (
             by_date.get(
@@ -140,17 +367,34 @@ def run_forecast(
             + flow.amount
         )
 
+    # =========================================================
+    # DAILY BALANCE SIMULATION
+    # =========================================================
+
     balance = opening_balance
 
     records = []
 
-    current = request_date.normalize()
+    current = (
+        request_date
+        .normalize()
+    )
 
-    while current <= forecast_end.normalize():
+    forecast_end_normalized = (
+        forecast_end
+        .normalize()
+    )
 
-        net_flow = by_date.get(
-            current,
-            Decimal("0"),
+    while (
+        current
+        <= forecast_end_normalized
+    ):
+
+        net_flow = (
+            by_date.get(
+                current,
+                Decimal("0"),
+            )
         )
 
         balance += net_flow
@@ -175,8 +419,13 @@ def run_forecast(
         records
     )
 
+    # =========================================================
+    # MINIMUM BALANCE DURING THE 90-DAY WINDOW
+    # =========================================================
+
     minimum_index = (
-        daily["balance"].idxmin()
+        daily["balance"]
+        .idxmin()
     )
 
     minimum_forecast_balance = (
@@ -188,22 +437,28 @@ def run_forecast(
         )
     )
 
-    minimum_date = pd.Timestamp(
-        daily.loc[
-            minimum_index,
-            "date",
-        ]
+    minimum_date = (
+        pd.Timestamp(
+            daily.loc[
+                minimum_index,
+                "date",
+            ]
+        )
     )
 
     return ForecastResult(
         request_date=request_date,
         forecast_end=forecast_end,
         opening_balance=opening_balance,
-        minimum_balance_required=minimum_balance,
+        minimum_balance_required=(
+            minimum_balance
+        ),
         minimum_forecast_balance=(
             minimum_forecast_balance
         ),
-        minimum_forecast_date=minimum_date,
+        minimum_forecast_date=(
+            minimum_date
+        ),
         flows=all_flows,
         daily=daily,
     )
@@ -212,6 +467,7 @@ def run_forecast(
 def is_safe(
     result: ForecastResult,
 ) -> bool:
+
     return (
         result.minimum_forecast_balance
         >=

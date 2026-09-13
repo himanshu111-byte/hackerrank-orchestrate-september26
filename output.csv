@@ -1,0 +1,251 @@
+request_id,amount_safe_to_pay,affordability_status,recommended_payment_method,payment_plan,earliest_date_for_full_payment,spending_changes_needed,decision_explanation
+request_26,15656000,affordable_now,full_payment,2025-08-03:15656000,2025-08-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_27,6670,affordable_now,full_payment,2026-07-05:6670,2026-07-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_28,297.35,affordable_later,wait,2024-08-15:1302.4,2024-08-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-08-15."
+request_29,0,affordable_now,full_payment,2025-11-04:51524,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_30,325.78,affordable_with_plan,installments,2026-04-06:268.74|2026-05-06:268.74|2026-06-05:268.74,,none,Use the supplied 3-payment installment option ending 2026-06-05.
+request_31,2946193.66,affordable_later,wait,2024-10-15:18164000,2024-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-10-15."
+request_32,13534.68,affordable_later,wait,2025-04-15:40018,,none,"The full amount is not safe to pay today, but becomes safe on 2025-04-15."
+request_33,28942.43,affordable_later,wait,2026-03-15:118000,,none,"The full amount is not safe to pay today, but becomes safe on 2026-03-15."
+request_34,62365.75,affordable_now,full_payment,2024-12-04:129400,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_35,23308.18,affordable_later,wait,2026-01-15:212000,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_36,582.67,affordable_later,wait,2026-09-15:3954,2026-09-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-09-15."
+request_37,4422505.47,affordable_later,wait,2024-05-15:14649000,,none,"The full amount is not safe to pay today, but becomes safe on 2024-05-15."
+request_38,170,affordable_later,wait,2025-10-15:971.3,2025-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-10-15."
+request_39,56404.13,affordable_later,wait,2026-06-15:208600,2026-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-06-15."
+request_40,359.92,affordable_later,wait,2024-08-15:1290.3,2024-08-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-08-15."
+request_41,9296910.45,affordable_later,wait,2026-01-15:38760000,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_42,52100,affordable_now,full_payment,2026-01-05:52100,2026-01-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_43,8378431.26,affordable_later,wait,2024-11-15:43339000,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_44,30505.32,affordable_later,wait,2025-04-15:95800,2025-04-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-04-15."
+request_45,3488751.02,affordable_later,wait,2026-09-15:21983000,2026-09-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-09-15."
+request_46,35832.02,affordable_with_plan,partial_payment,2024-12-03:35832.02|2024-12-15:13617.98,2024-12-15,none,Pay 35832.02 today and the remaining 13617.98 on 2024-12-15.
+request_47,2828773.7,affordable_now,full_payment,2025-05-05:38114000,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_48,45700,affordable_now,full_payment,2026-07-25:45700,2026-07-25,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_49,12704243.35,affordable_with_plan,installments,2024-03-18:11902106.67|2024-04-18:11902106.67|2024-05-19:11902106.67,2024-04-15,none,Use the supplied 3-payment installment option ending 2024-05-19.
+request_50,43900,affordable_now,full_payment,2025-08-06:43900,2025-08-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_51,2191000,affordable_now,full_payment,2026-01-03:2191000,2026-01-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_52,18837.53,affordable_later,wait,2024-06-15:28870,2024-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-06-15."
+request_53,471.65,affordable_with_plan,installments,2025-11-21:589.06|2025-12-19:589.06|2026-01-16:589.06,2026-01-15,none,Use the supplied 3-payment installment option ending 2026-01-16.
+request_54,2192.31,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 37000.
+request_55,143460.63,affordable_with_plan,installments,2026-06-11:75781.33|2026-07-12:75781.33|2026-08-12:75781.33,2026-07-15,none,Use the supplied 3-payment installment option ending 2026-08-12.
+request_56,637.18,affordable_with_plan,partial_payment,2025-02-03:637.18|2025-02-15:244.38,2025-02-15,none,Pay 637.18 today and the remaining 244.38 on 2025-02-15.
+request_57,13007.82,affordable_later,wait,2026-06-15:61446,2026-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-06-15."
+request_58,16226000,affordable_now,full_payment,2024-12-07:16226000,2024-12-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_59,113931.09,affordable_with_plan,installments,2025-05-07:48741.33|2025-06-04:48741.33|2025-07-02:48741.33,,none,Use the supplied 3-payment installment option ending 2025-07-02.
+request_60,115.78,affordable_later,wait,2026-02-15:199.89,2026-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-02-15."
+request_61,29062,affordable_with_plan,installments,2024-03-17:10074.83|2024-04-17:10074.83|2024-05-18:10074.83,2024-03-03,none,Use the supplied 3-payment installment option ending 2024-05-18.
+request_62,0,affordable_now,full_payment,2025-08-05:404.23,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_63,37913.58,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 153500.
+request_64,42667.54,not_affordable,not_recommended,none,2024-07-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_65,5849.37,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 15500.
+request_66,22200,affordable_now,full_payment,2026-04-03:22200,2026-04-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_67,319.43,affordable_later,wait,2024-10-15:2094,2024-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-10-15."
+request_68,1345.32,affordable_with_plan,installments,2025-02-14:725.09|2025-03-14:725.09|2025-04-11:725.09,2025-03-23,none,Use the supplied 3-payment installment option ending 2025-04-11.
+request_69,529.1,affordable_now,full_payment,2026-01-04:529.1,2026-01-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_70,50373.61,affordable_later,wait,2025-02-15:243900,2025-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-02-15."
+request_71,55429.6,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 8884800.
+request_72,11330,affordable_now,full_payment,2026-07-05:11330,2026-07-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_73,71400,affordable_now,full_payment,2023-01-20:71400,2023-01-20,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_74,5010,affordable_now,full_payment,2025-08-04:5010,2025-08-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_75,12716.35,affordable_with_plan,installments,2026-04-09:9800.27|2026-05-09:9800.27|2026-06-08:9800.27,,none,Use the supplied 3-payment installment option ending 2026-06-08.
+request_76,727.2,not_affordable,not_recommended,none,2024-08-15,none,"The conservative full-payment forecast becomes safe only on 2024-08-15, which is after the desired completion date, and no other eligible plan is available."
+request_77,60459.03,affordable_with_plan,full_payment,2025-11-05:60700,2025-11-15,stop:event_7143,"Make the permitted flexible-spending changes (stop:event_7143), then pay the full requested amount today while maintaining the required minimum balance."
+request_78,45402.14,not_affordable,not_recommended,none,2025-10-15,none,"The conservative full-payment forecast becomes safe only on 2025-10-15, which is after the desired completion date, and no other eligible plan is available."
+request_79,315.14,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 1000.
+request_80,109321.13,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 121300.
+request_81,2076,affordable_now,full_payment,2026-07-03:2076,2026-07-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_82,303.79,affordable_later,wait,2025-02-15:1405.2,2025-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-02-15."
+request_83,12198.18,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 37800.
+request_84,21116.42,affordable_later,wait,2026-06-15:95400,2026-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-06-15."
+request_85,396561.3,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 6396300.
+request_86,46300,affordable_now,full_payment,2025-08-03:46300,2025-08-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_87,19645.21,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 185900.
+request_88,10697.32,affordable_with_plan,installments,2024-06-14:9045.23|2024-07-15:9045.23|2024-08-15:9045.23,2024-07-15,none,Use the supplied 3-payment installment option ending 2024-08-15.
+request_89,9287179.05,not_affordable,not_recommended,none,2026-01-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_90,616.6,affordable_now,full_payment,2026-07-06:2560,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_91,482.05,affordable_later,wait,2024-11-15:1927.2,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_92,34034,affordable_now,full_payment,2025-02-05:34034,2025-02-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_93,1729.2,affordable_now,full_payment,2026-04-07:1729.2,2026-04-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_94,181.83,affordable_now,full_payment,2024-12-04:572,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_95,7310.77,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 145500.
+request_96,74345.39,affordable_with_plan,installments,2026-01-10:31269.33|2026-02-09:31269.33|2026-03-11:31269.33,2026-02-15,none,Use the supplied 3-payment installment option ending 2026-03-11.
+request_97,1454.36,affordable_with_plan,installments,2024-03-19:8145.28|2024-04-19:8145.28|2024-05-20:8145.28,2024-04-15,none,Use the supplied 3-payment installment option ending 2024-05-20.
+request_98,6706.14,affordable_later,wait,2025-10-15:27148,2025-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-10-15."
+request_99,17480.54,affordable_with_plan,full_payment,2026-07-04:18062,2026-07-15,reduce_to:event_9232:1065.90,"Make the permitted flexible-spending changes (reduce_to:event_9232:1065.90), then pay the full requested amount today while maintaining the required minimum balance."
+request_100,25013.95,not_affordable,not_recommended,none,2024-08-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_101,143500,affordable_now,full_payment,2025-11-03:143500,2025-11-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_102,1432.22,affordable_with_plan,installments,2026-04-05:594.88|2026-05-05:594.88|2026-06-04:594.88,,none,Use the supplied 3-payment installment option ending 2026-06-04.
+request_103,4449.89,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 125500.
+request_104,17204,affordable_now,full_payment,2025-02-04:17204,2025-02-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_105,50987.32,affordable_with_plan,full_payment,2026-06-08:53500,2026-06-15,reduce_to:event_9720:1632|reduce_to:event_9721:1720,"Make the permitted flexible-spending changes (reduce_to:event_9720:1632|reduce_to:event_9721:1720), then pay the full requested amount today while maintaining the required minimum balance."
+request_106,458.14,affordable_later,wait,2025-02-15:2207.7,2025-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-02-15."
+request_107,2416.55,affordable_with_plan,installments,2025-05-08:878.59|2025-06-05:878.59|2025-07-03:878.59,2025-07-15,none,Use the supplied 3-payment installment option ending 2025-07-03.
+request_108,1870.7,not_affordable,not_recommended,none,2026-09-15,none,"The conservative full-payment forecast becomes safe only on 2026-09-15, which is after the desired completion date, and no other eligible plan is available."
+request_109,475.12,not_affordable,not_recommended,none,2024-05-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_110,18949.86,affordable_with_plan,installments,2025-08-06:7748.69|2025-09-03:7748.69|2025-10-01:7748.69,,none,Use the supplied 3-payment installment option ending 2025-10-01.
+request_111,16625000,affordable_now,full_payment,2026-04-03:16625000,2026-04-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_112,271.7,affordable_now,full_payment,2024-06-05:271.7,2024-06-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_113,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 82300.
+request_114,55757.79,not_affordable,not_recommended,none,2026-01-15,none,"The conservative full-payment forecast becomes safe only on 2026-01-15, which is after the desired completion date, and no other eligible plan is available."
+request_115,14984.33,affordable_later,wait,2024-11-15:80500,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_116,7353.5,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 80300.
+request_117,862.9,affordable_with_plan,full_payment,2026-07-05:880,2026-07-15,reduce_to:event_10878:20.50,"Make the permitted flexible-spending changes (reduce_to:event_10878:20.50), then pay the full requested amount today while maintaining the required minimum balance."
+request_118,645.73,affordable_with_plan,installments,2024-12-07:255.87|2025-01-07:255.87|2025-02-07:255.87,2025-02-15,none,Use the supplied 3-payment installment option ending 2025-02-07.
+request_119,59560.68,not_affordable,not_recommended,none,2025-06-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_120,7714000,affordable_now,full_payment,2026-04-06:7714000,2026-04-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_121,633.6,affordable_now,full_payment,2024-03-03:633.6,2024-03-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_122,18838023.14,affordable_with_plan,installments,2025-08-05:7126773.33|2025-09-02:7126773.33|2025-09-30:7126773.33,,none,Use the supplied 3-payment installment option ending 2025-09-30.
+request_123,0,affordable_now,full_payment,2026-01-07:4076000,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_124,1402.47,not_affordable,not_recommended,none,2024-07-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_125,5633.37,not_affordable,not_recommended,none,2025-11-15,none,"The conservative full-payment forecast becomes safe only on 2025-11-15, which is after the desired completion date, and no other eligible plan is available."
+request_126,15683.13,affordable_now,full_payment,2026-07-03:159600,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_127,6936.57,affordable_later,wait,2024-10-15:23980,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-10-15."
+request_128,25168,affordable_now,full_payment,2025-02-07:25168,2025-02-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_129,114.94,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of USD 800.
+request_130,363.58,affordable_later,wait,2025-01-15:1978.8,2025-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-01-15."
+request_131,1120.68,affordable_with_plan,installments,2025-05-06:643.14|2025-06-03:643.14|2025-07-01:643.14,2025-07-23,none,Use the supplied 3-payment installment option ending 2025-07-01.
+request_132,257.5,affordable_later,wait,2026-02-15:379.86,2026-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-02-15."
+request_133,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 9986200.
+request_134,4471244.66,affordable_later,wait,2025-10-15:21831000,2025-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-10-15."
+request_135,279.65,affordable_with_plan,full_payment,2026-07-06:304.8,2026-07-15,reduce_to:event_12413:11.50|reduce_to:event_12458:17.50,"Make the permitted flexible-spending changes (reduce_to:event_12413:11.50|reduce_to:event_12458:17.50), then pay the full requested amount today while maintaining the required minimum balance."
+request_136,535.14,affordable_with_plan,full_payment,2024-06-03:560.4,2024-06-15,reduce_to:event_12498:27.20,"Make the permitted flexible-spending changes (reduce_to:event_12498:27.20), then pay the full requested amount today while maintaining the required minimum balance."
+request_137,22506.12,affordable_later,wait,2026-01-15:80100,,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_138,884.77,affordable_with_plan,partial_payment,2026-04-07:884.77|2026-04-15:372.17,2026-04-15,none,Pay 884.77 today and the remaining 372.17 on 2026-04-15.
+request_139,1341.13,not_affordable,not_recommended,none,2024-10-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_140,1373.15,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 21600.
+request_141,20991.47,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 67300.
+request_142,703.06,affordable_now,full_payment,2024-12-05:1263.6,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_143,2433.1,affordable_later,wait,2025-07-15:12584,2025-07-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-07-15."
+request_144,233.34,affordable_now,full_payment,2026-07-04:233.34,2026-07-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_145,27148.95,not_affordable,not_recommended,none,2024-05-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_146,16640.1,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 108600.
+request_147,463.21,affordable_with_plan,installments,2026-04-08:391.63|2026-05-08:391.63|2026-06-07:391.63,2026-05-15,none,Use the supplied 3-payment installment option ending 2026-06-07.
+request_148,7089.67,not_affordable,not_recommended,none,2024-08-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_149,22206.4,not_affordable,not_recommended,none,2025-12-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_150,262.58,not_affordable,not_recommended,none,2026-03-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_151,26999000,affordable_now,full_payment,2024-09-03:26999000,2024-09-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_152,11081.77,not_affordable,not_recommended,none,2025-04-15,none,"The conservative full-payment forecast becomes safe only on 2025-04-15, which is after the desired completion date, and no other eligible plan is available."
+request_153,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of USD 1400.
+request_154,1625.8,affordable_with_plan,installments,2024-12-04:563.61|2025-01-04:563.61|2025-02-04:563.61,2024-12-04,none,Use the supplied 3-payment installment option ending 2025-02-04.
+request_155,112500,affordable_now,full_payment,2025-05-06:112500,2025-05-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_156,10210.41,affordable_later,wait,2026-06-15:43076,2026-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-06-15."
+request_157,4759483.65,affordable_later,wait,2024-04-15:23503000,2024-04-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-04-15."
+request_158,207360.77,affordable_with_plan,installments,2025-08-07:84101.33|2025-09-04:84101.33|2025-10-02:84101.33,,none,Use the supplied 3-payment installment option ending 2025-10-02.
+request_159,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 8700.
+request_160,574.47,affordable_with_plan,installments,2024-06-13:432.05|2024-07-14:432.05|2024-08-14:432.05,2024-07-15,none,Use the supplied 3-payment installment option ending 2024-08-14.
+request_161,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 23010400.
+request_162,1292120.99,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 24161100.
+request_163,8282573.11,not_affordable,not_recommended,none,2024-11-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_164,27018000,affordable_with_plan,installments,2025-02-11:9366240|2025-03-11:9366240|2025-04-08:9366240,2025-02-04,none,Use the supplied 3-payment installment option ending 2025-04-08.
+request_165,61465.36,affordable_now,full_payment,2026-04-06:80600,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_166,2801.94,affordable_with_plan,installments,2024-12-03:1007.97|2025-01-03:1007.97|2025-02-03:1007.97,,none,Use the supplied 3-payment installment option ending 2025-02-03.
+request_167,43802,affordable_now,full_payment,2025-05-05:43802,2025-05-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_168,30620.71,affordable_with_plan,partial_payment,2026-01-07:30620.71|2026-02-15:18759.29,2026-02-15,none,Pay 30620.71 today and the remaining 18759.29 on 2026-02-15.
+request_169,41976,affordable_now,full_payment,2024-03-04:41976,2024-03-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_170,30050365.52,affordable_with_plan,installments,2025-08-06:12804480|2025-09-03:12804480|2025-10-01:12804480,2025-09-15,none,Use the supplied 3-payment installment option ending 2025-10-01.
+request_171,34.08,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 500.
+request_172,9132.25,affordable_with_plan,partial_payment,2024-06-05:9132.25|2024-06-15:1067.75,2024-06-15,none,Pay 9132.25 today and the remaining 1067.75 on 2024-06-15.
+request_173,54710.84,not_affordable,not_recommended,none,2026-01-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_174,1094.64,affordable_with_plan,installments,2026-04-04:397.35|2026-05-04:397.35|2026-06-03:397.35,,none,Use the supplied 3-payment installment option ending 2026-06-03.
+request_175,2346.3,affordable_now,full_payment,2024-09-06:2346.3,2024-09-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_176,370.27,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 600.
+request_177,1017.6,affordable_now,full_payment,2026-01-05:1017.6,2026-01-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_178,2631.47,affordable_with_plan,installments,2024-12-07:1018.54|2025-01-07:1018.54|2025-02-07:1018.54,,none,Use the supplied 3-payment installment option ending 2025-02-07.
+request_179,6938095.47,affordable_later,wait,2025-07-15:41648000,2025-07-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-07-15."
+request_180,66500,affordable_now,full_payment,2026-07-06:66500,2026-07-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_181,423.75,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of USD 2000.
+request_182,65714,affordable_now,full_payment,2025-08-05:65714,2025-08-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_183,23083719.54,affordable_with_plan,installments,2026-04-10:9313546.67|2026-05-10:9313546.67|2026-06-09:9313546.67,2026-05-15,none,Use the supplied 3-payment installment option ending 2026-06-09.
+request_184,7759.25,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 110800.
+request_185,318.91,affordable_later,wait,2026-01-15:1257.3,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_186,3667.92,affordable_later,wait,2026-03-15:26554,,none,"The full amount is not safe to pay today, but becomes safe on 2026-03-15."
+request_187,37750.93,affordable_later,wait,2024-11-15:187500,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_188,91.94,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 900.
+request_189,488.4,affordable_now,full_payment,2026-07-04:488.4,2026-07-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_190,455.38,affordable_later,wait,2025-02-15:2557.5,2025-02-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-02-15."
+request_191,664.4,affordable_now,full_payment,2025-05-03:664.4,2025-05-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_192,83.28,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of USD 1000.
+request_193,32.96,affordable_with_plan,installments,2024-03-21:420.23|2024-04-21:420.23|2024-05-22:420.23,2024-04-15,none,Use the supplied 3-payment installment option ending 2024-05-22.
+request_194,34560.31,affordable_later,wait,2025-10-23:132800,2025-10-23,none,"The full amount is not safe to pay today, but becomes safe on 2025-10-23."
+request_195,962.71,affordable_with_plan,installments,2026-01-09:405.74|2026-02-08:405.74|2026-03-10:405.74,2026-02-15,none,Use the supplied 3-payment installment option ending 2026-03-10.
+request_196,762.3,affordable_now,full_payment,2024-06-03:762.3,2024-06-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_197,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 26245900.
+request_198,185800,affordable_now,full_payment,2026-07-07:185800,2026-07-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_199,23674000,affordable_with_plan,installments,2024-09-07:8206986.67|2024-10-08:8206986.67|2024-11-08:8206986.67,2024-09-04,none,Use the supplied 3-payment installment option ending 2024-11-08.
+request_200,21717000,affordable_now,full_payment,2025-02-06:21717000,2025-02-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_201,22731494.56,affordable_now,full_payment,2026-04-03:23997000,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_202,123900,affordable_now,full_payment,2024-12-05:123900,2024-12-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_203,1053.89,affordable_with_plan,installments,2025-05-10:499.93|2025-06-07:499.93|2025-07-05:499.93,,none,Use the supplied 3-payment installment option ending 2025-07-05.
+request_204,581.41,affordable_later,wait,2026-01-15:588.74,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_205,10621000,affordable_now,full_payment,2024-03-06:10621000,2024-03-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_206,1404.7,affordable_with_plan,installments,2025-08-03:486.96|2025-08-31:486.96|2025-09-28:486.96,2025-08-03,none,Use the supplied 3-payment installment option ending 2025-09-28.
+request_207,4667.03,affordable_later,wait,2026-07-15:11830,2026-07-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-07-15."
+request_208,3086388.92,affordable_later,wait,2024-06-15:4413000,2024-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-06-15."
+request_209,1631.65,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 18400.
+request_210,1131.27,affordable_with_plan,partial_payment,2026-04-06:1131.27|2026-04-15:228.75,2026-04-15,none,Pay 1131.27 today and the remaining 228.75 on 2026-04-15.
+request_211,282.39,affordable_later,wait,2024-10-15:1788.6,2024-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-10-15."
+request_212,5392825.13,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 29579800.
+request_213,2242.15,affordable_with_plan,installments,2026-01-21:1165.63|2026-02-20:1165.63|2026-03-22:1165.63,,none,Use the supplied 3-payment installment option ending 2026-03-22.
+request_214,39886.24,affordable_with_plan,partial_payment,2024-12-04:39886.24|2024-12-15:29863.76,2024-12-15,none,Pay 39886.24 today and the remaining 29863.76 on 2024-12-15.
+request_215,28422.77,affordable_with_plan,installments,2025-05-09:10395.15|2025-06-06:10395.15|2025-07-04:10395.15,,none,Use the supplied 3-payment installment option ending 2025-07-04.
+request_216,483.67,affordable_later,wait,2026-09-15:3332.4,2026-09-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-09-15."
+request_217,19708.31,affordable_with_plan,installments,2024-03-19:12889.07|2024-04-19:12889.07|2024-05-20:12889.07,2024-05-15,none,Use the supplied 3-payment installment option ending 2024-05-20.
+request_218,24356755.65,affordable_with_plan,installments,2025-08-07:21195893.33|2025-09-04:21195893.33|2025-10-02:21195893.33,2025-09-15,none,Use the supplied 3-payment installment option ending 2025-10-02.
+request_219,703.44,affordable_with_plan,installments,2026-04-07:580.01|2026-05-07:580.01|2026-06-06:580.01,2026-05-15,none,Use the supplied 3-payment installment option ending 2026-06-06.
+request_220,61.69,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 1100.
+request_221,109800,affordable_now,full_payment,2025-11-03:109800,2025-11-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_222,32438.07,affordable_now,full_payment,2026-01-05:34078,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_223,898.7,affordable_now,full_payment,2024-09-07:898.7,2024-09-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_224,10114269.45,affordable_with_plan,partial_payment,2025-02-04:10114269.45|2025-02-15:212730.55,2025-02-15,none,Pay 10114269.45 today and the remaining 212730.55 on 2025-02-15.
+request_225,9745298.47,affordable_with_plan,installments,2026-07-20:7647120|2026-08-19:7647120|2026-09-18:7647120,2026-09-15,none,Use the supplied 3-payment installment option ending 2026-09-18.
+request_226,157000,affordable_now,full_payment,2024-12-03:157000,2024-12-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_227,7371.14,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 62900.
+request_228,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 26191200.
+request_229,517.26,affordable_with_plan,installments,2024-03-18:529.29|2024-04-18:529.29|2024-05-19:529.29,2024-05-15,none,Use the supplied 3-payment installment option ending 2024-05-19.
+request_230,3537.6,affordable_now,full_payment,2025-08-06:3537.6,2025-08-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_231,30933.75,not_affordable,not_recommended,none,2026-02-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_232,493.51,affordable_later,wait,2024-08-15:1970.1,,none,"The full amount is not safe to pay today, but becomes safe on 2024-08-15."
+request_233,0,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 10365700.
+request_234,230.4,affordable_later,wait,2026-09-15:1213.3,2026-09-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-09-15."
+request_235,967.2,affordable_now,full_payment,2024-09-06:967.2,2024-09-06,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_236,5792726.63,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 16768600.
+request_237,22245632.09,affordable_now,full_payment,2026-04-05:23826000,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_238,663.6,affordable_with_plan,installments,2024-12-07:230.05|2025-01-07:230.05|2025-02-07:230.05,2024-12-07,none,Use the supplied 3-payment installment option ending 2025-02-07.
+request_239,642,affordable_now,full_payment,2025-05-04:642,2025-05-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_240,13796.82,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of INR 52800.
+request_241,21052000,affordable_with_plan,installments,2024-03-17:7298026.67|2024-04-17:7298026.67|2024-05-18:7298026.67,2024-03-03,none,Use the supplied 3-payment installment option ending 2024-05-18.
+request_242,25.56,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 600.
+request_243,17468,affordable_now,full_payment,2026-07-07:17468,2026-07-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_244,49918,affordable_now,full_payment,2024-06-04:49918,2024-06-04,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_245,23718.24,affordable_later,wait,2026-01-15:128500,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_246,64086,affordable_with_plan,installments,2026-04-03:22216.48|2026-05-03:22216.48|2026-06-02:22216.48,2026-04-03,none,Use the supplied 3-payment installment option ending 2026-06-02.
+request_247,1059.3,affordable_now,full_payment,2024-09-05:1059.3,2024-09-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_248,941.64,affordable_with_plan,partial_payment,2025-02-07:941.64|2025-04-15:1023.96,2025-04-15,none,Pay 941.64 today and the remaining 1023.96 on 2025-04-15.
+request_249,128.77,affordable_later,wait,2026-03-15:643.2,2026-03-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-03-15."
+request_250,15365.19,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 35300.
+request_251,27.33,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of EUR 1300.
+request_252,4876866.63,affordable_later,wait,2026-09-15:28082000,2026-09-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-09-15."
+request_253,1553.29,affordable_with_plan,installments,2024-03-21:984.6|2024-04-21:984.6|2024-05-22:984.6,2024-05-15,none,Use the supplied 3-payment installment option ending 2024-05-22.
+request_254,627.67,affordable_later,wait,2025-10-15:3535.2,2025-10-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-10-15."
+request_255,608352.62,affordable_now,full_payment,2026-04-06:3345000,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_256,151212.64,affordable_with_plan,installments,2024-06-10:75816|2024-07-11:75816|2024-08-11:75816,2024-07-15,none,Use the supplied 3-payment installment option ending 2024-08-11.
+request_257,371.26,affordable_later,wait,2026-01-15:1352.4,2026-01-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-01-15."
+request_258,1113.6,affordable_now,full_payment,2026-01-07:1113.6,2026-01-07,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_259,253.61,affordable_later,wait,2024-11-15:935,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_260,6413526.8,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of IDR 20727700.
+request_261,1830.4,affordable_now,full_payment,2026-07-03:1830.4,2026-07-03,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_262,9236000,affordable_now,full_payment,2024-12-05:9236000,2024-12-05,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_263,5997.09,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of ZAR 24100.
+request_264,22630.02,affordable_later,wait,2026-06-15:111300,2026-06-15,none,"The full amount is not safe to pay today, but becomes safe on 2026-06-15."
+request_265,0,affordable_now,full_payment,2024-03-06:45970,,none,The full requested amount can be paid today while maintaining the required minimum balance.
+request_266,774.1,affordable_with_plan,installments,2025-08-03:324.13|2025-08-31:324.13|2025-09-28:324.13,2025-09-15,none,Use the supplied 3-payment installment option ending 2025-09-28.
+request_267,1626.76,not_affordable,not_recommended,none,2026-03-15,none,No payment method accepted by the user provides a safe plan that completes the request by the desired date.
+request_268,1032.18,affordable_with_plan,installments,2024-06-14:841.22|2024-07-15:841.22|2024-08-15:841.22,2024-07-15,none,Use the supplied 3-payment installment option ending 2024-08-15.
+request_269,10125.71,affordable_later,wait,2025-11-15:15490,2025-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2025-11-15."
+request_270,93.53,not_affordable,not_recommended,none,,none,No eligible payment plan can complete the request safely while maintaining the minimum balance of USD 1400.
+request_271,12414.27,affordable_later,wait,2024-11-15:91300,2024-11-15,none,"The full amount is not safe to pay today, but becomes safe on 2024-11-15."
+request_272,5406652.06,affordable_with_plan,installments,2025-02-12:4709466.67|2025-03-12:4709466.67|2025-04-09:4709466.67,2025-03-15,none,Use the supplied 3-payment installment option ending 2025-04-09.
+request_273,9602432.49,affordable_with_plan,partial_payment,2026-04-07:9602432.49|2026-04-15:6258567.51,2026-04-15,none,Pay 9602432.49 today and the remaining 6258567.51 on 2026-04-15.
+request_274,2078.69,not_affordable,not_recommended,none,2025-02-15,none,"The conservative full-payment forecast becomes safe only on 2025-02-15, which is after the desired completion date, and no other eligible plan is available."
+request_275,15884000,affordable_now,full_payment,2025-05-06:15884000,2025-05-06,none,The full requested amount can be paid today while maintaining the required minimum balance.

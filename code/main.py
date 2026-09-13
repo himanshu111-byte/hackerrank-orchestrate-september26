@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal
+from itertools import combinations
 from pathlib import Path
 
 import pandas as pd
@@ -28,6 +29,13 @@ from money import (
     ExchangeRateBook,
     money,
     round_money,
+)
+
+from spending_changes import (
+    actions_are_compatible,
+    apply_spending_actions,
+    format_spending_actions,
+    generate_spending_actions,
 )
 
 
@@ -175,15 +183,6 @@ def _split_preferences(
 def _fmt_money(
     value,
 ) -> str:
-    """
-    Output monetary values without unnecessary trailing zeroes.
-
-    Examples:
-
-        25256.00      -> 25256
-        603.30        -> 603.3
-        15952906.67   -> 15952906.67
-    """
 
     value = round_money(
         money(
@@ -281,7 +280,9 @@ def _payments_to_cashflows(
             Decimal,
         ]
     ],
-) -> list[CashFlow]:
+) -> list[
+    CashFlow
+]:
 
     result = []
 
@@ -301,9 +302,12 @@ def _payments_to_cashflows(
 
         result.append(
             CashFlow(
-                date=pd.Timestamp(
-                    payment_date
-                ).normalize(),
+                date=(
+                    pd.Timestamp(
+                        payment_date
+                    )
+                    .normalize()
+                ),
                 amount=-amount,
                 source=(
                     "candidate_payment"
@@ -329,23 +333,15 @@ def _candidate_is_safe(
     baseline_flows,
 ) -> bool:
     """
-    Verify a concrete candidate payment plan through the user's
-    desired completion date.
+    Candidate-plan validation used by the public ground-truth examples.
 
-    Important distinction:
+    The underlying baseline remains a 90-day forecast.
 
-    - The financial baseline itself still spans 90 days.
-    - amount_safe_to_pay remains based on the full 90-day baseline.
-    - earliest_date_for_full_payment remains independently calculated
-      by capacity.py.
-    - Candidate-plan feasibility is evaluated from request_date
-      through desired_completion_date.
+    A candidate must:
 
-    A candidate is safe only when:
-
-    1. the candidate completes by desired_completion_date, and
-    2. the forecast balance never falls below minimum_balance during
-       that completion horizon.
+      1. finish by desired_completion_date; and
+      2. remain above minimum_balance from request_date through the
+         desired completion horizon.
     """
 
     request_date = (
@@ -419,7 +415,8 @@ def _candidate_is_safe(
 
     return (
         minimum_through_deadline
-        >= money(
+        >=
+        money(
             minimum_balance
         )
     )
@@ -433,16 +430,6 @@ def _find_first_deadline_safe_full_date(
     requested_amount,
     baseline_flows,
 ) -> pd.Timestamp | None:
-    """
-    Find the earliest date from request_date through
-    desired_completion_date on which the complete requested amount
-    can be paid while remaining above the minimum balance through the
-    user's desired completion horizon.
-
-    This is intentionally separate from
-    earliest_full_payment_date(), because that function supplies the
-    independent conservative 90-day output field.
-    """
 
     request_date = (
         pd.Timestamp(
@@ -470,8 +457,10 @@ def _find_first_deadline_safe_full_date(
         candidate = PaymentCandidate(
             method=(
                 "full_payment"
-                if candidate_date
-                == request_date
+                if (
+                    candidate_date
+                    == request_date
+                )
                 else "wait"
             ),
             payments=[
@@ -562,7 +551,6 @@ def _full_payment_candidate(
         .normalize()
     )
 
-    # Full payment means the whole requested amount is safe today.
     if (
         deadline_safe_full_date
         != request_date
@@ -592,11 +580,8 @@ def _full_payment_candidate(
             "affordable_now"
         ),
         explanation=(
-            "The full requested amount "
-            "can be paid today while "
-            "maintaining the required "
-            "minimum balance through the "
-            "desired completion horizon."
+            "The full requested amount can be paid today while "
+            "maintaining the required minimum balance."
         ),
     )
 
@@ -647,8 +632,6 @@ def _wait_candidate(
         .normalize()
     )
 
-    # Waiting is useful only when the amount is not safe today,
-    # but becomes safe on a later date.
     if (
         deadline_safe_full_date
         <= request_date
@@ -678,13 +661,8 @@ def _wait_candidate(
             "affordable_later"
         ),
         explanation=(
-            "The full amount is not safe "
-            "to pay today, but becomes safe "
-            "on "
-            f"{_fmt_date(deadline_safe_full_date)} "
-            "while maintaining the required "
-            "minimum balance through the "
-            "desired completion horizon."
+            "The full amount is not safe to pay today, but becomes "
+            f"safe on {_fmt_date(deadline_safe_full_date)}."
         ),
     )
 
@@ -750,12 +728,6 @@ def _partial_payment_candidate(
     ):
         return None
 
-    # Exact challenge requirement:
-    #
-    # payment 1 = amount_safe_to_pay today
-    # payment 2 = requested_amount - amount_safe_to_pay
-    #
-    # Do not optimize or recalculate the first payment.
     remainder = round_money(
         requested_amount
         - safe_today
@@ -785,8 +757,7 @@ def _partial_payment_candidate(
             "affordable_with_plan"
         ),
         explanation=(
-            f"Pay {_fmt_money(safe_today)} "
-            "today and the remaining "
+            f"Pay {_fmt_money(safe_today)} today and the remaining "
             f"{_fmt_money(remainder)} on "
             f"{_fmt_date(earliest_full)}."
         ),
@@ -802,12 +773,6 @@ def _installment_months_allowed(
     number_of_payments: int,
     max_installment_months,
 ) -> bool:
-    """
-    Supplied options are approximately monthly schedules.
-
-    max_installment_months therefore acts as the maximum allowed
-    supplied installment duration / monthly payment count.
-    """
 
     if pd.isna(
         max_installment_months
@@ -903,7 +868,9 @@ def _installment_candidates(
     desired_completion_date: pd.Timestamp,
     accepted_methods: set[str],
     max_installment_months,
-) -> list[PaymentCandidate]:
+) -> list[
+    PaymentCandidate
+]:
 
     if (
         "installments"
@@ -1006,9 +973,6 @@ def _installment_candidates(
         ):
             continue
 
-        # Preserve the supplied payment schedule exactly.
-        #
-        # Do not recalculate or modify the final installment.
         total_paid = sum(
             (
                 amount
@@ -1043,14 +1007,158 @@ def _installment_candidates(
                 ),
                 explanation=(
                     "Use the supplied "
-                    f"{number_of_payments}-payment "
-                    "installment option ending "
+                    f"{number_of_payments}-payment installment "
+                    f"option ending "
                     f"{_fmt_date(final_payment_date)}."
                 ),
             )
         )
 
     return candidates
+
+
+# =============================================================
+# SPENDING CHANGES
+# =============================================================
+
+
+def _spending_change_candidates(
+    profile: pd.Series,
+    request_date: pd.Timestamp,
+    requested_amount: Decimal,
+    accepted_methods: set[str],
+    baseline_flows: list[
+        CashFlow
+    ],
+) -> list[
+    tuple[
+        PaymentCandidate,
+        list[CashFlow],
+    ]
+]:
+    """
+    Generate full-payment-today candidates using between one and
+    three legal flexible-spending changes.
+
+    Each returned item contains:
+
+        (candidate, modified_baseline_flows)
+
+    because a spending change modifies recurring projections rather
+    than the payment itself.
+    """
+
+    if (
+        "full_payment"
+        not in accepted_methods
+    ):
+        return []
+
+    actions = (
+        generate_spending_actions(
+            profile=profile,
+            baseline_flows=(
+                baseline_flows
+            ),
+        )
+    )
+
+    if not actions:
+        return []
+
+    request_date = (
+        pd.Timestamp(
+            request_date
+        )
+        .normalize()
+    )
+
+    results = []
+
+    max_action_count = min(
+        3,
+        len(
+            actions
+        ),
+    )
+
+    for action_count in range(
+        1,
+        max_action_count + 1,
+    ):
+
+        for combo_tuple in combinations(
+            actions,
+            action_count,
+        ):
+
+            selected_actions = list(
+                combo_tuple
+            )
+
+            # Prevent cases such as:
+            #
+            # stop:event_1816
+            # reduce_to:event_1816:23.50
+            #
+            # in one plan.
+            if not actions_are_compatible(
+                selected_actions
+            ):
+                continue
+
+            modified_flows = (
+                apply_spending_actions(
+                    baseline_flows=(
+                        baseline_flows
+                    ),
+                    actions=(
+                        selected_actions
+                    ),
+                )
+            )
+
+            changes_text = (
+                format_spending_actions(
+                    selected_actions
+                )
+            )
+
+            candidate = PaymentCandidate(
+                method=(
+                    "full_payment"
+                ),
+                payments=[
+                    (
+                        request_date,
+                        requested_amount,
+                    )
+                ],
+                total_paid=(
+                    requested_amount
+                ),
+                spending_changes=(
+                    changes_text
+                ),
+                status=(
+                    "affordable_with_plan"
+                ),
+                explanation=(
+                    "Make the permitted flexible-spending changes "
+                    f"({changes_text}), then pay the full requested "
+                    "amount today while maintaining the required "
+                    "minimum balance."
+                ),
+            )
+
+            results.append(
+                (
+                    candidate,
+                    modified_flows,
+                )
+            )
+
+    return results
 
 
 # =============================================================
@@ -1087,20 +1195,31 @@ def _candidate_rank(
     candidate: PaymentCandidate,
 ):
     """
-    Challenge ranking after eligibility and safety validation:
+    Ranking:
 
-    1. complete request by desired date
-       (already enforced before ranking)
-    2. no spending changes
-    3. minimize total amount paid
-    4. start earlier
-    5. fewer payments
-    6. lowest payment_option_id
+    1. no spending changes
+    2. minimum total paid
+    3. earlier start
+    4. fewer payments
+    5. lowest supplied option ID
+
+    For otherwise identical spending-change candidates, fewer textual
+    changes and deterministic lexical ordering provide stable output.
     """
 
     requires_changes = (
         candidate.spending_changes
         != "none"
+    )
+
+    change_count = (
+        0
+        if not requires_changes
+        else len(
+            candidate.spending_changes.split(
+                "|"
+            )
+        )
     )
 
     return (
@@ -1111,6 +1230,8 @@ def _candidate_rank(
         _option_id_rank(
             candidate.payment_option_id
         ),
+        change_count,
+        candidate.spending_changes,
     )
 
 
@@ -1201,11 +1322,6 @@ def decide_request(
     # =========================================================
     # BASELINE
     # =========================================================
-    #
-    # Build the baseline once per request.
-    #
-    # The baseline itself remains a full 90-day forecast.
-    # =========================================================
 
     baseline_flows = (
         build_baseline_cashflows(
@@ -1236,9 +1352,6 @@ def decide_request(
 
     # =========================================================
     # INDEPENDENT OUTPUT FIELDS
-    # =========================================================
-    #
-    # These remain independent from payment-plan selection.
     # =========================================================
 
     safe_today = (
@@ -1271,14 +1384,7 @@ def decide_request(
     )
 
     # =========================================================
-    # DEADLINE-AWARE FULL-PAYMENT FEASIBILITY
-    # =========================================================
-    #
-    # This value is used only to choose full-payment / wait
-    # recommendations.
-    #
-    # It deliberately does NOT replace earliest_full, because
-    # earliest_full remains the conservative 90-day output field.
+    # DEADLINE-AWARE FULL/W​​AIT DATE
     # =========================================================
 
     deadline_safe_full = None
@@ -1311,17 +1417,17 @@ def decide_request(
             )
         )
 
-    # =========================================================
-    # GENERATE ELIGIBLE CANDIDATES
-    # =========================================================
-
+    # Candidate paired with the baseline it must be validated against.
     candidates: list[
-        PaymentCandidate
+        tuple[
+            PaymentCandidate,
+            list[CashFlow],
+        ]
     ] = []
 
-    # ---------------------------------------------------------
-    # Full payment
-    # ---------------------------------------------------------
+    # =========================================================
+    # FULL
+    # =========================================================
 
     full = (
         _full_payment_candidate(
@@ -1344,20 +1450,17 @@ def decide_request(
     )
 
     if full is not None:
+
         candidates.append(
-            full
+            (
+                full,
+                baseline_flows,
+            )
         )
 
-    # ---------------------------------------------------------
-    # Partial payment
-    # ---------------------------------------------------------
-    #
-    # Partial payment continues to use the independent challenge
-    # fields:
-    #
-    # first payment = amount_safe_to_pay
-    # second payment = remainder on earliest full-payment date
-    # ---------------------------------------------------------
+    # =========================================================
+    # PARTIAL
+    # =========================================================
 
     partial = (
         _partial_payment_candidate(
@@ -1386,15 +1489,19 @@ def decide_request(
     )
 
     if partial is not None:
+
         candidates.append(
-            partial
+            (
+                partial,
+                baseline_flows,
+            )
         )
 
-    # ---------------------------------------------------------
-    # Installments
-    # ---------------------------------------------------------
+    # =========================================================
+    # INSTALLMENTS
+    # =========================================================
 
-    candidates.extend(
+    installments = (
         _installment_candidates(
             request_id=(
                 request_id
@@ -1416,9 +1523,18 @@ def decide_request(
         )
     )
 
-    # ---------------------------------------------------------
-    # Wait
-    # ---------------------------------------------------------
+    for candidate in installments:
+
+        candidates.append(
+            (
+                candidate,
+                baseline_flows,
+            )
+        )
+
+    # =========================================================
+    # WAIT
+    # =========================================================
 
     wait = (
         _wait_candidate(
@@ -1441,23 +1557,54 @@ def decide_request(
     )
 
     if wait is not None:
+
         candidates.append(
-            wait
+            (
+                wait,
+                baseline_flows,
+            )
         )
 
     # =========================================================
-    # VERIFY EVERY CANDIDATE
-    # =========================================================
-    #
-    # Candidate schedules are inserted into the same baseline.
-    #
-    # Candidate-plan safety is evaluated through the desired
-    # completion date rather than the entire later 90-day period.
+    # SPENDING-CHANGE FULL PAYMENT
     # =========================================================
 
-    safe_candidates = []
+    spending_candidates = (
+        _spending_change_candidates(
+            profile=(
+                profile
+            ),
+            request_date=(
+                request_date
+            ),
+            requested_amount=(
+                requested_amount
+            ),
+            accepted_methods=(
+                accepted_methods
+            ),
+            baseline_flows=(
+                baseline_flows
+            ),
+        )
+    )
 
-    for candidate in candidates:
+    candidates.extend(
+        spending_candidates
+    )
+
+    # =========================================================
+    # VERIFY CANDIDATES
+    # =========================================================
+
+    safe_candidates: list[
+        PaymentCandidate
+    ] = []
+
+    for (
+        candidate,
+        candidate_baseline,
+    ) in candidates:
 
         if _candidate_is_safe(
             candidate=(
@@ -1476,7 +1623,7 @@ def decide_request(
                 desired_completion_date
             ),
             baseline_flows=(
-                baseline_flows
+                candidate_baseline
             ),
         ):
 
@@ -1485,7 +1632,7 @@ def decide_request(
             )
 
     # =========================================================
-    # RANK SAFE CANDIDATES
+    # SELECT BEST
     # =========================================================
 
     if safe_candidates:
@@ -1515,13 +1662,11 @@ def decide_request(
         )
 
         spending_changes = (
-            selected
-            .spending_changes
+            selected.spending_changes
         )
 
         explanation = (
-            selected
-            .explanation
+            selected.explanation
         )
 
     else:
@@ -1543,31 +1688,13 @@ def decide_request(
         )
 
         if (
-            deadline_safe_full
-            is not None
-            and "full_payment"
-            not in accepted_methods
-        ):
-
-            explanation = (
-                "The requested amount could "
-                "be completed safely, but "
-                "full payment is not among "
-                "the user's accepted payment "
-                "methods and no other eligible "
-                "plan is safe."
-            )
-
-        elif (
             earliest_full
             is None
         ):
 
             explanation = (
-                "No eligible payment plan "
-                "can complete the request "
-                "safely while maintaining "
-                f"the minimum balance of "
+                "No eligible payment plan can complete the request "
+                "safely while maintaining the minimum balance of "
                 f"{home_currency} "
                 f"{_fmt_money(minimum_balance)}."
             )
@@ -1580,26 +1707,19 @@ def decide_request(
         ):
 
             explanation = (
-                "The conservative full-payment "
-                "forecast becomes safe only on "
-                f"{_fmt_date(earliest_full)}, "
-                "which is after the desired "
-                "completion date, and no other "
-                "eligible plan is available."
+                "The conservative full-payment forecast becomes safe "
+                f"only on {_fmt_date(earliest_full)}, which is after "
+                "the desired completion date, and no other eligible "
+                "plan is available."
             )
 
         else:
 
             explanation = (
-                "No payment method accepted "
-                "by the user provides a safe "
-                "plan that completes the "
-                "request by the desired date."
+                "No payment method accepted by the user provides a "
+                "safe plan that completes the request by the desired "
+                "date."
             )
-
-    # =========================================================
-    # FINAL OUTPUT ROW
-    # =========================================================
 
     return {
         "request_id": (
@@ -1666,7 +1786,6 @@ def main():
         bundle.requests
     )
 
-    # Preserve deterministic dataset order.
     for (
         index,
         request,
@@ -1750,8 +1869,7 @@ def main():
     )
 
     print(
-        f"Generated {len(output)} "
-        f"decisions."
+        f"Generated {len(output)} decisions."
     )
 
     print(

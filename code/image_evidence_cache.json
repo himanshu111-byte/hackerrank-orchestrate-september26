@@ -1,0 +1,26 @@
+{
+  "image_01": {
+    "amount": "4365000",
+    "currency": "IDR",
+    "document_type": "payslip",
+    "confidence": 0.99
+  },
+  "image_03": {
+    "amount": "41272",
+    "currency": "INR",
+    "document_type": "grocery_receipt",
+    "confidence": 0.99
+  },
+  "image_04": {
+    "amount": "2854",
+    "currency": "INR",
+    "document_type": "grocery_order",
+    "confidence": 0.98
+  },
+  "image_05": {
+    "amount": "704.05",
+    "currency": "INR",
+    "document_type": "telecom_bill",
+    "confidence": 0.99
+  }
+}

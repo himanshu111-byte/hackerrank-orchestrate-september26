@@ -26,27 +26,15 @@ class RecurringSeries:
     direction: str
     flexibility: str
 
-    # ---------------------------------------------------------
-    # SOURCE EVENT
-    # ---------------------------------------------------------
-    #
-    # A recurring projection must retain the historical event that
-    # represents the current recurring series.
-    #
-    # This allows the decision engine to produce valid challenge
-    # instructions such as:
-    #
-    #     stop:event_476
-    #     reduce_to:event_989:665950
-    #
-    # We use the most recent settled event from the inferred series
-    # as its authoritative source event.
-    # ---------------------------------------------------------
+    # Most recent historical event representing this recurring series.
     source_event_id: str
+
+    # Optional minimum value that a reducible recurring expense may be
+    # reduced to.
+    minimum_allowed_amount: Decimal | None
 
     last_date: pd.Timestamp
     cadence_days: int | None
-
     monthly: bool
 
     amount: Decimal
@@ -91,7 +79,7 @@ def _classify_cadence(
     if median_interval is None:
         return None, False
 
-    # Calendar-month behaviour.
+    # Calendar-month recurrence.
     if (
         27
         <= median_interval
@@ -117,6 +105,57 @@ def _classify_cadence(
         return best, False
 
     return None, False
+
+
+def _minimum_allowed_amount_for_latest_event(
+    latest_row: pd.Series,
+    home_currency: str,
+    fx: ExchangeRateBook,
+) -> Decimal | None:
+    """
+    Return a dataset-supplied reduction floor when present.
+
+    The amount is converted into the user's home currency so it is
+    directly comparable with projected recurring cashflow values.
+    """
+
+    if (
+        "minimum_allowed_amount"
+        not in latest_row.index
+    ):
+        return None
+
+    raw_value = latest_row[
+        "minimum_allowed_amount"
+    ]
+
+    if pd.isna(
+        raw_value
+    ):
+        return None
+
+    try:
+        converted = fx.convert(
+            amount=raw_value,
+            rate_date=pd.Timestamp(
+                latest_row[
+                    "event_date"
+                ]
+            ),
+            from_currency=latest_row[
+                "currency"
+            ],
+            to_currency=home_currency,
+        )
+
+    except Exception:
+        return None
+
+    return abs(
+        money(
+            converted
+        )
+    )
 
 
 def infer_recurring_series(
@@ -156,11 +195,6 @@ def infer_recurring_series(
         )
     ].copy()
 
-    # ---------------------------------------------------------
-    # Only event types that can reasonably form recurring cash
-    # obligations belong in the generic recurrence engine.
-    # ---------------------------------------------------------
-
     historical = historical[
         historical[
             "event_type"
@@ -174,13 +208,7 @@ def infer_recurring_series(
         )
     ].copy()
 
-    # ---------------------------------------------------------
-    # Salary is handled separately by salary_resolver.py.
-    #
-    # Bonuses, commissions, arrears and base salary must not be
-    # merged into one generic recurring salary stream.
-    # ---------------------------------------------------------
-
+    # Salary has its own dedicated resolver.
     historical = historical[
         (
             historical[
@@ -192,10 +220,6 @@ def infer_recurring_series(
         )
     ].copy()
 
-    # ---------------------------------------------------------
-    # Keep recent history only.
-    # ---------------------------------------------------------
-
     history_start = (
         request_date
         - pd.Timedelta(
@@ -204,12 +228,10 @@ def infer_recurring_series(
     )
 
     historical = historical[
-        (
-            historical[
-                "event_date"
-            ]
-            >= history_start
-        )
+        historical[
+            "event_date"
+        ]
+        >= history_start
     ].copy()
 
     group_columns = [
@@ -240,16 +262,14 @@ def infer_recurring_series(
         )
 
         if (
-            len(group)
+            len(
+                group
+            )
             < MIN_SERIES_EVENTS
         ):
             continue
 
-        # -----------------------------------------------------
-        # Use recent observations for cadence detection so an old
-        # historic cadence does not dominate a changed pattern.
-        # -----------------------------------------------------
-
+        # Use recent history for cadence inference.
         recent = (
             group.tail(
                 8
@@ -291,12 +311,8 @@ def infer_recurring_series(
             flexibility,
         ) = keys
 
-        # -----------------------------------------------------
-        # Estimate recurring amount from the latest five events.
-        #
-        # Median is intentionally resistant to one unusual purchase.
-        # -----------------------------------------------------
-
+        # Use median of the five most recent observations to limit the
+        # effect of a single unusual transaction.
         recent_amounts = []
 
         for (
@@ -316,21 +332,15 @@ def infer_recurring_series(
                 continue
 
             converted = fx.convert(
-                amount=(
-                    row[
-                        "amount"
-                    ]
-                ),
-                rate_date=(
-                    row[
-                        "event_date"
-                    ]
-                ),
-                from_currency=(
-                    row[
-                        "currency"
-                    ]
-                ),
+                amount=row[
+                    "amount"
+                ],
+                rate_date=row[
+                    "event_date"
+                ],
+                from_currency=row[
+                    "currency"
+                ],
                 to_currency=(
                     home_currency
                 ),
@@ -351,14 +361,7 @@ def infer_recurring_series(
             )
         )
 
-        # -----------------------------------------------------
-        # Generic credits are deliberately not projected.
-        #
-        # Guaranteed salary is handled separately. Other credits
-        # such as refunds, bonuses and windfalls cannot safely be
-        # assumed to recur.
-        # -----------------------------------------------------
-
+        # Non-salary credits are too uncertain to project.
         if (
             str(
                 direction
@@ -377,30 +380,33 @@ def infer_recurring_series(
             ]
         )
 
+        minimum_allowed_amount = (
+            _minimum_allowed_amount_for_latest_event(
+                latest_row=latest_row,
+                home_currency=home_currency,
+                fx=fx,
+            )
+        )
+
         series_list.append(
             RecurringSeries(
-                event_type=(
-                    str(
-                        event_type
-                    )
+                event_type=str(
+                    event_type
                 ),
-                category=(
-                    str(
-                        category
-                    )
+                category=str(
+                    category
                 ),
-                direction=(
-                    str(
-                        direction
-                    )
+                direction=str(
+                    direction
                 ),
-                flexibility=(
-                    str(
-                        flexibility
-                    )
+                flexibility=str(
+                    flexibility
                 ),
                 source_event_id=(
                     source_event_id
+                ),
+                minimum_allowed_amount=(
+                    minimum_allowed_amount
                 ),
                 last_date=(
                     pd.Timestamp(
@@ -419,10 +425,8 @@ def infer_recurring_series(
                 amount=(
                     forecast_amount
                 ),
-                sample_count=(
-                    len(
-                        group
-                    )
+                sample_count=len(
+                    group
                 ),
             )
         )
@@ -507,11 +511,8 @@ def generate_recurring_cashflows(
                 >= request_date
             ):
 
-                # -------------------------------------------------
-                # Avoid double counting when an explicit future
-                # event already represents this occurrence.
-                # -------------------------------------------------
-
+                # Explicit future occurrence wins over generated
+                # recurrence to avoid double-counting.
                 duplicate = any(
                     (
                         flow.category
@@ -523,7 +524,8 @@ def generate_recurring_cashflows(
                             (
                                 pd.Timestamp(
                                     flow.date
-                                ).normalize()
+                                )
+                                .normalize()
                                 -
                                 next_date
                             ).days
@@ -559,22 +561,17 @@ def generate_recurring_cashflows(
                             source=(
                                 "recurring_projection"
                             ),
-
-                            # -------------------------------------
-                            # Critical addition:
-                            #
-                            # Preserve the historical source event
-                            # for stop/reduce instructions.
-                            # -------------------------------------
                             event_id=(
                                 series.source_event_id
                             ),
-
                             category=(
                                 series.category
                             ),
                             flexibility=(
                                 series.flexibility
+                            ),
+                            minimum_allowed_amount=(
+                                series.minimum_allowed_amount
                             ),
                         )
                     )

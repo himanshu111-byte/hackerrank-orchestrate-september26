@@ -1,3 +1,5 @@
+from image_evidence import patch_image_amounts
+from event_resolver import resolve_linked_events
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -43,6 +45,13 @@ def load_datasets() -> DatasetBundle:
         ),
         messages=_read_csv("messages.csv"),
         images=_read_csv("images.csv"),
+    )
+
+    bundle.events = (
+        patch_image_amounts(
+            events=bundle.events,
+            images=bundle.images,
+        )
     )
 
     # Parse dates once.
@@ -113,7 +122,8 @@ def get_user_events(
     events: pd.DataFrame,
     user_id: str,
 ) -> pd.DataFrame:
-    return (
+
+    user_events = (
         events[
             events["user_id"] == user_id
         ]
@@ -122,4 +132,8 @@ def get_user_events(
             ["event_date", "event_id"]
         )
         .reset_index(drop=True)
+    )
+
+    return resolve_linked_events(
+        user_events
     )

@@ -92,11 +92,12 @@ def main():
                 events=events,
                 request_date=request_date,
                 home_currency=(
-                    profile[
-                        "home_currency"
-                    ]
+                    profile["home_currency"]
                 ),
                 fx=fx,
+                messages=data.messages,
+                user_id=user_id,
+                request_id=request_id,
             )
         )
 

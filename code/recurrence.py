@@ -26,6 +26,24 @@ class RecurringSeries:
     direction: str
     flexibility: str
 
+    # ---------------------------------------------------------
+    # SOURCE EVENT
+    # ---------------------------------------------------------
+    #
+    # A recurring projection must retain the historical event that
+    # represents the current recurring series.
+    #
+    # This allows the decision engine to produce valid challenge
+    # instructions such as:
+    #
+    #     stop:event_476
+    #     reduce_to:event_989:665950
+    #
+    # We use the most recent settled event from the inferred series
+    # as its authoritative source event.
+    # ---------------------------------------------------------
+    source_event_id: str
+
     last_date: pd.Timestamp
     cadence_days: int | None
 
@@ -42,7 +60,9 @@ def _median_interval_days(
     if len(dates) < 2:
         return None
 
-    sorted_dates = sorted(dates)
+    sorted_dates = sorted(
+        dates
+    )
 
     intervals = [
         (
@@ -59,7 +79,9 @@ def _median_interval_days(
         return None
 
     return float(
-        np.median(intervals)
+        np.median(
+            intervals
+        )
     )
 
 
@@ -69,20 +91,29 @@ def _classify_cadence(
     if median_interval is None:
         return None, False
 
-    # Calendar-month behaviour
-    if 27 <= median_interval <= 32:
+    # Calendar-month behaviour.
+    if (
+        27
+        <= median_interval
+        <= 32
+    ):
         return None, True
 
     best = min(
         SUPPORTED_FIXED_CADENCES,
         key=lambda x: abs(
-            x - median_interval
+            x
+            - median_interval
         ),
     )
 
-    if abs(
-        best - median_interval
-    ) <= 2:
+    if (
+        abs(
+            best
+            - median_interval
+        )
+        <= 2
+    ):
         return best, False
 
     return None, False
@@ -95,26 +126,45 @@ def infer_recurring_series(
     fx: ExchangeRateBook,
 ) -> list[RecurringSeries]:
 
+    request_date = (
+        pd.Timestamp(
+            request_date
+        )
+        .normalize()
+    )
+
     historical = events[
         (
-            events["event_date"]
+            events[
+                "event_date"
+            ]
             < request_date
         )
-        & (
-            events["status"]
+        &
+        (
+            events[
+                "status"
+            ]
             == "settled"
         )
-        & (
-            events["direction"]
+        &
+        (
+            events[
+                "direction"
+            ]
             != "non_cash"
         )
     ].copy()
 
-    # Refunds, investment trades and unusual
-    # lifecycle rows should not generate
-    # future recurring patterns.
+    # ---------------------------------------------------------
+    # Only event types that can reasonably form recurring cash
+    # obligations belong in the generic recurrence engine.
+    # ---------------------------------------------------------
+
     historical = historical[
-        historical["event_type"].isin(
+        historical[
+            "event_type"
+        ].isin(
             [
                 "expense",
                 "subscription",
@@ -122,20 +172,45 @@ def infer_recurring_series(
                 "income",
             ]
         )
-    ]
+    ].copy()
 
-    # Keep recent history. Five occurrences are
-    # usually enough to infer the generated
-    # recurring pattern in this dataset.
+    # ---------------------------------------------------------
+    # Salary is handled separately by salary_resolver.py.
+    #
+    # Bonuses, commissions, arrears and base salary must not be
+    # merged into one generic recurring salary stream.
+    # ---------------------------------------------------------
+
+    historical = historical[
+        (
+            historical[
+                "category"
+            ]
+            .astype(str)
+            .str.lower()
+            != "salary"
+        )
+    ].copy()
+
+    # ---------------------------------------------------------
+    # Keep recent history only.
+    # ---------------------------------------------------------
+
     history_start = (
         request_date
-        - pd.Timedelta(days=400)
+        - pd.Timedelta(
+            days=400
+        )
     )
 
     historical = historical[
-        historical["event_date"]
-        >= history_start
-    ]
+        (
+            historical[
+                "event_date"
+            ]
+            >= history_start
+        )
+    ].copy()
 
     group_columns = [
         "event_type",
@@ -148,67 +223,123 @@ def infer_recurring_series(
         RecurringSeries
     ] = []
 
-    for keys, group in historical.groupby(
+    for (
+        keys,
+        group,
+    ) in historical.groupby(
         group_columns,
         dropna=False,
     ):
 
         group = (
             group
-            .sort_values("event_date")
+            .sort_values(
+                "event_date"
+            )
             .copy()
         )
 
-        if len(group) < MIN_SERIES_EVENTS:
+        if (
+            len(group)
+            < MIN_SERIES_EVENTS
+        ):
             continue
 
-        # Use recent events only for cadence
-        # estimation so old pattern changes
-        # do not dominate.
-        recent = group.tail(8)
+        # -----------------------------------------------------
+        # Use recent observations for cadence detection so an old
+        # historic cadence does not dominate a changed pattern.
+        # -----------------------------------------------------
+
+        recent = (
+            group.tail(
+                8
+            )
+        )
 
         dates = list(
-            recent["event_date"]
+            recent[
+                "event_date"
+            ]
         )
 
         median_interval = (
-            _median_interval_days(dates)
+            _median_interval_days(
+                dates
+            )
         )
 
-        cadence_days, monthly = (
+        (
+            cadence_days,
+            monthly,
+        ) = (
             _classify_cadence(
                 median_interval
             )
         )
 
         if (
-            cadence_days is None
+            cadence_days
+            is None
             and not monthly
         ):
             continue
 
-        event_type, category, direction, flexibility = keys
+        (
+            event_type,
+            category,
+            direction,
+            flexibility,
+        ) = keys
 
-        # Use the recent median.
+        # -----------------------------------------------------
+        # Estimate recurring amount from the latest five events.
         #
-        # This is intentionally robust to
-        # one unusually expensive transaction.
+        # Median is intentionally resistant to one unusual purchase.
+        # -----------------------------------------------------
+
         recent_amounts = []
 
-        for _, row in group.tail(5).iterrows():
+        for (
+            _,
+            row,
+        ) in (
+            group
+            .tail(5)
+            .iterrows()
+        ):
 
-            if pd.isna(row["amount"]):
+            if pd.isna(
+                row[
+                    "amount"
+                ]
+            ):
                 continue
 
             converted = fx.convert(
-                amount=row["amount"],
-                rate_date=row["event_date"],
-                from_currency=row["currency"],
-                to_currency=home_currency,
+                amount=(
+                    row[
+                        "amount"
+                    ]
+                ),
+                rate_date=(
+                    row[
+                        "event_date"
+                    ]
+                ),
+                from_currency=(
+                    row[
+                        "currency"
+                    ]
+                ),
+                to_currency=(
+                    home_currency
+                ),
             )
 
             recent_amounts.append(
-                float(converted)
+                float(
+                    converted
+                )
             )
 
         if not recent_amounts:
@@ -220,55 +351,79 @@ def infer_recurring_series(
             )
         )
 
-        # Income requires a stricter test.
+        # -----------------------------------------------------
+        # Generic credits are deliberately not projected.
         #
-        # We should not assume irregular bonuses/
-        # windfalls continue forever.
-        if direction == "credit":
+        # Guaranteed salary is handled separately. Other credits
+        # such as refunds, bonuses and windfalls cannot safely be
+        # assumed to recur.
+        # -----------------------------------------------------
 
-            if category != "salary":
-                continue
+        if (
+            str(
+                direction
+            ).lower()
+            == "credit"
+        ):
+            continue
 
-            recent_income = (
-                np.array(
-                    recent_amounts,
-                    dtype=float,
-                )
-            )
+        latest_row = (
+            group.iloc[-1]
+        )
 
-            mean_income = (
-                recent_income.mean()
-            )
-
-            if mean_income <= 0:
-                continue
-
-            cv = (
-                recent_income.std()
-                / mean_income
-            )
-
-            # High variation often indicates
-            # bonuses or commissions rather than
-            # confirmed regular salary.
-            if cv > 0.20:
-                continue
+        source_event_id = str(
+            latest_row[
+                "event_id"
+            ]
+        )
 
         series_list.append(
             RecurringSeries(
-                event_type=event_type,
-                category=category,
-                direction=direction,
-                flexibility=flexibility,
-                last_date=pd.Timestamp(
-                    group.iloc[-1][
-                        "event_date"
-                    ]
+                event_type=(
+                    str(
+                        event_type
+                    )
                 ),
-                cadence_days=cadence_days,
-                monthly=monthly,
-                amount=forecast_amount,
-                sample_count=len(group),
+                category=(
+                    str(
+                        category
+                    )
+                ),
+                direction=(
+                    str(
+                        direction
+                    )
+                ),
+                flexibility=(
+                    str(
+                        flexibility
+                    )
+                ),
+                source_event_id=(
+                    source_event_id
+                ),
+                last_date=(
+                    pd.Timestamp(
+                        latest_row[
+                            "event_date"
+                        ]
+                    )
+                    .normalize()
+                ),
+                cadence_days=(
+                    cadence_days
+                ),
+                monthly=(
+                    monthly
+                ),
+                amount=(
+                    forecast_amount
+                ),
+                sample_count=(
+                    len(
+                        group
+                    )
+                ),
             )
         )
 
@@ -278,9 +433,14 @@ def infer_recurring_series(
 def _next_month(
     date: pd.Timestamp,
 ) -> pd.Timestamp:
+
     return (
-        date
-        + pd.DateOffset(months=1)
+        pd.Timestamp(
+            date
+        )
+        + pd.DateOffset(
+            months=1
+        )
     )
 
 
@@ -291,63 +451,125 @@ def generate_recurring_cashflows(
     explicit_flows: list[CashFlow],
 ) -> list[CashFlow]:
 
-    generated: list[CashFlow] = []
+    request_date = (
+        pd.Timestamp(
+            request_date
+        )
+        .normalize()
+    )
+
+    forecast_end = (
+        pd.Timestamp(
+            forecast_end
+        )
+        .normalize()
+    )
+
+    generated: list[
+        CashFlow
+    ] = []
 
     for series in series_list:
 
         if series.monthly:
-            next_date = _next_month(
-                series.last_date
-            )
 
-        else:
             next_date = (
-                series.last_date
-                + pd.Timedelta(
-                    days=series.cadence_days
+                _next_month(
+                    series.last_date
                 )
             )
 
-        while next_date <= forecast_end:
+        else:
 
-            if next_date >= request_date:
-
-                # Prevent double-counting when an
-                # explicit pending/scheduled event
-                # already represents this occurrence.
-                duplicate = any(
-                    flow.category
-                    == series.category
-                    and abs(
-                        (
-                            flow.date
-                            - next_date
-                        ).days
+            next_date = (
+                series.last_date
+                + pd.Timedelta(
+                    days=(
+                        series.cadence_days
                     )
-                    <= 2
+                )
+            )
+
+        while (
+            next_date
+            <= forecast_end
+        ):
+
+            next_date = (
+                pd.Timestamp(
+                    next_date
+                )
+                .normalize()
+            )
+
+            if (
+                next_date
+                >= request_date
+            ):
+
+                # -------------------------------------------------
+                # Avoid double counting when an explicit future
+                # event already represents this occurrence.
+                # -------------------------------------------------
+
+                duplicate = any(
+                    (
+                        flow.category
+                        == series.category
+                    )
+                    and
+                    (
+                        abs(
+                            (
+                                pd.Timestamp(
+                                    flow.date
+                                ).normalize()
+                                -
+                                next_date
+                            ).days
+                        )
+                        <= 2
+                    )
                     for flow
                     in explicit_flows
                 )
 
                 if not duplicate:
 
-                    amount = (
-                        abs(series.amount)
+                    amount = abs(
+                        series.amount
                     )
 
                     if (
-                        series.direction
+                        str(
+                            series.direction
+                        ).lower()
                         == "debit"
                     ):
                         amount = -amount
 
                     generated.append(
                         CashFlow(
-                            date=next_date,
-                            amount=amount,
+                            date=(
+                                next_date
+                            ),
+                            amount=(
+                                amount
+                            ),
                             source=(
                                 "recurring_projection"
                             ),
+
+                            # -------------------------------------
+                            # Critical addition:
+                            #
+                            # Preserve the historical source event
+                            # for stop/reduce instructions.
+                            # -------------------------------------
+                            event_id=(
+                                series.source_event_id
+                            ),
+
                             category=(
                                 series.category
                             ),
@@ -358,15 +580,21 @@ def generate_recurring_cashflows(
                     )
 
             if series.monthly:
-                next_date = _next_month(
-                    next_date
+
+                next_date = (
+                    _next_month(
+                        next_date
+                    )
                 )
 
             else:
+
                 next_date = (
                     next_date
                     + pd.Timedelta(
-                        days=series.cadence_days
+                        days=(
+                            series.cadence_days
+                        )
                     )
                 )
 
